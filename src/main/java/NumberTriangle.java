@@ -112,7 +112,6 @@ public class NumberTriangle {
      *
      */
     public int retrieve(String path) {
-        // TODO implement this method
         NumberTriangle current = this;  // start at this node
         for (int i = 0; i < path.length(); i++) {
             char c = path.charAt(i);
@@ -144,26 +143,47 @@ public class NumberTriangle {
         InputStream inputStream = NumberTriangle.class.getClassLoader().getResourceAsStream(fname);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
-        // TODO define any variables that you want to use to store things
 
         // will need to return the top of the NumberTriangle,
         // so might want a variable for that.
         NumberTriangle top = null;
+        List<NumberTriangle> prevRow = new ArrayList<>();
 
         String line = br.readLine();
         while (line != null) {
+            // split line into numbers
+            String[] parts = line.trim().split("\\s+");
+            List<NumberTriangle> newRow = new ArrayList<>();
 
-            // remove when done; this line is included so running starter code prints the contents of the file
-            System.out.println(line);
+            // build NumberTriangle nodes for this row
+            for (String part : parts) {
+                newRow.add(new NumberTriangle(Integer.parseInt(part)));
+            }
 
-            // TODO process the line
+            // if first row, set top
+            if (top == null) {
+                top = newRow.get(0);
+            } else {
+                // link newRow to prevRow
+                for (int i = 0; i < newRow.size(); i++) {
+                    if (i < prevRow.size()) {
+                        prevRow.get(i).setLeft(newRow.get(i));
+                    }
+                    if (i > 0) {
+                        prevRow.get(i - 1).setRight(newRow.get(i));
+                    }
+                }
+            }
 
+            // move down one row
+            prevRow = newRow;
             //read the next line
             line = br.readLine();
         }
         br.close();
         return top;
     }
+
 
     public static void main(String[] args) throws IOException {
 
