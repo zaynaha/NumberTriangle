@@ -64,6 +64,30 @@ public class NumberTriangle {
      */
     public void maxSumPath() {
         // for fun [not for credit]:
+        // If leaf node, nothing to do
+        if (left == null && right == null) {
+            return;
+        }
+
+        int leftSum = 0;
+        int rightSum = 0;
+
+        if (left != null) {
+            left.maxSumPath();
+            leftSum = left.getRoot();
+        }
+
+        if (right != null) {
+            right.maxSumPath();
+            rightSum = right.getRoot();
+        }
+
+        // Update root to include max path
+        this.root = this.root + Math.max(leftSum, rightSum);
+
+        // Collapse into leaf
+        this.left = null;
+        this.right = null;
     }
 
 
@@ -89,8 +113,19 @@ public class NumberTriangle {
      */
     public int retrieve(String path) {
         // TODO implement this method
-        return -1;
+        NumberTriangle current = this;  // start at this node
+        for (int i = 0; i < path.length(); i++) {
+            char c = path.charAt(i);
+            if (c == 'l') {
+                current = current.left;
+            } else if (c == 'r') {
+                current = current.right;
+            }
+        }
+
+        return current.getRoot();
     }
+
 
     /** Read in the NumberTriangle structure from a file.
      *
@@ -108,7 +143,6 @@ public class NumberTriangle {
         // are more convenient to work with when reading the file contents.
         InputStream inputStream = NumberTriangle.class.getClassLoader().getResourceAsStream(fname);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-
 
         // TODO define any variables that you want to use to store things
 
